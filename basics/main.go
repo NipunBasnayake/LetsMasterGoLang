@@ -1,6 +1,7 @@
 package main
 
 import (
+	"booking_app/helper"
 	"fmt"
 	"strings"
 )
@@ -8,7 +9,7 @@ import (
 const conferenceName = "Go Conference"
 const conferenceTickets int = 50
 
-var remainingTickets uint = 50
+var RemainingTickets uint = 50
 var bookings []string
 
 func main() {
@@ -17,16 +18,16 @@ func main() {
 
 	for {
 		firstName, lastName, email, userTickets := getUserInput()
-		isValidName, isValidEmail, isValidTicketNumber := validateUserInput(firstName, lastName, email, userTickets)
+		isValidName, isValidEmail, isValidTicketNumber := helper.ValidateUserInput(firstName, lastName, email, userTickets, RemainingTickets)
 
 		if isValidName && isValidEmail && isValidTicketNumber {
 
-			bookTicket(remainingTickets, firstName, lastName, email, userTickets, conferenceName)
+			bookTicket(RemainingTickets, firstName, lastName, email, userTickets, conferenceName)
 
 			firstNames := printFirstNames()
 			fmt.Printf("The first names of bookings are: %v\n", firstNames)
 
-			noTicketsReamaining := remainingTickets == 0
+			noTicketsReamaining := RemainingTickets == 0
 			if noTicketsReamaining {
 				fmt.Println("Our conference is booked out. Come back next year.")
 				break
@@ -47,7 +48,7 @@ func main() {
 
 func greetUsers() {
 	fmt.Printf("Welcome to %v booking application!\n", conferenceName)
-	fmt.Printf("We have total of %v tickets and %v are still available.\n", conferenceTickets, remainingTickets)
+	fmt.Printf("We have total of %v tickets and %v are still available.\n", conferenceTickets, RemainingTickets)
 	fmt.Println("Get your tickets here to attend")
 }
 
@@ -58,13 +59,6 @@ func printFirstNames() []string {
 		firstNames = append(firstNames, names[0])
 	}
 	return firstNames
-}
-
-func validateUserInput(firstName string, lastName string, email string, userTickets uint) (bool, bool, bool) {
-	isValidName := len(firstName) >= 2 && len(lastName) >= 2
-	isValidEmail := strings.Contains(email, "@")
-	isValidTicketNumber := userTickets > 0 && userTickets <= remainingTickets
-	return isValidName, isValidEmail, isValidTicketNumber
 }
 
 func getUserInput() (string, string, string, uint) {
